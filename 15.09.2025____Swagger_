@@ -1,0 +1,36 @@
+STEP-1
+========
+
+We need to add below parameters in pom.xml to work with SWAGGER instead of using POSTMAN
+---------------------------------------------------------------------
+<dependency>
+    <groupId>org.springdoc</groupId>
+    <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+    <version>2.5.0</version>
+</dependency>
+-------------------------------------------------------------------
+
+Note: To access SWAGGER url, we need to disable CSRF.
+In order to access SWAGGER in the browser, firstly disable CSRF. why ?
+Those url's which you access through client like postman, angular, swaggar will not work.
+
+this should be disable in testing phase, but production phase no need to disable.
+
+=========================================================================================
+
+To Access Swagger - Run the Project
+
+http://localhost:8080/swagger-ui.html
+
+Or (sometimes):
+
+http://localhost:8080/swagger-ui/index.html
+
+=================================================================================
+
+
+
+
+
+
+
