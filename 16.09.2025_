@@ -1,0 +1,42 @@
+Here we will create one CustomerUserDetailsService under service layer.
+
+
+
+
+src/main/java
+
+com.authserviceex1.service
+
+CustomerUserDetailsService.java
+================================
+
+package com.authserviceex1.service;
+
+import java.util.Collections;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import com.authserviceex1.entity.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+import com.authserviceex1.repository.UserRepository;
+
+public class CustomerUserDetailsService implements UserDetailsService {
+
+	
+	@Autowired
+	
+	private UserRepository userRepository;
+	
+	
+	//this will interact with database and generate "User" that has the  Details Object ( UserName, Password, Role)
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		User user= userRepository.findByUsername(username);
+	
+		return new org.springframework.security.core.userdetails.User(user.getUsername(),user.getPassword(),Collections.emptyList());
+	}
+
+	
+}
