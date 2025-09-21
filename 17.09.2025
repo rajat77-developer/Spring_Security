@@ -1,4 +1,6 @@
-
+=======
+step-1
+=======
 we will create a LoginDto to receive the username and password. ( in controller layer)
 
 LoginDto will responsible for taking username and password.
@@ -8,11 +10,8 @@ package com.authserviceex1.dto;
 
 public class LoginDto {
 
-	
-	
 	private String username;
 	private String password;
-	
 	public String getUsername() {
 		return username;
 	}
@@ -24,12 +23,136 @@ public class LoginDto {
 	}
 	public void setPassword(String password) {
 		this.password = password;
-	}
-	
-	
+	}	
 }
 
+======
+step-2
+=======
+
 Now go to authcontroller and build a login method 
+===================
+authcontroller.java
+===================
+
+//constructor based injection
+private AuthenticationManager authenticationManager;
+	public AuthController(AuthService authService, AuthenticationManager authenticationManager) {
+		this.authenticationManager=authenticationManager;
+	}
+
+//login method
+
+@PostMapping("/login")
+	 public ResponseEntity<APIResponse<String>> loginCheck(@RequestBody LoginDto loginDto){
+
+		UsernamePasswordAuthenticationToken
+		token= new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
+	
+		Authentication authenticate = authenticationManager.authenticate(token);
+		return null;
+      }
+
+
+==============================================================================
+now 
+Your  --> authcontroller.java class full code is attached below
+----------------------------------------------------------------
+
+package com.authserviceex1.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.boot.autoconfigure.couchbase.CouchbaseProperties.Authentication;
+import org.springframework.security.core.Authentication;
+
+//import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.authserviceex1.dto.LoginDto;
+import com.authserviceex1.dto.UserDto;
+import com.authserviceex1.entity.APIResponse;
+import com.authserviceex1.service.AuthService;
+
+
+
+@RestController
+@RequestMapping("/api/v1/auth")
+public class AuthController {
+ 
+	@Autowired
+	private AuthService authService;
+	
+	private AuthenticationManager authenticationManager;
+	
+	
+	
+	
+	public AuthController(AuthService authService, AuthenticationManager authenticationManager) {
+		//super();
+		this.authService = authService;
+		this.authenticationManager=authenticationManager;
+	
+	
+	
+	}
+	
+	//http://localhost:8080/api/v1/auth/register/
+	
+	@PostMapping("/register/")
+	public ResponseEntity<APIResponse <String>> registerUser(UserDto userDto){
+	
+		
+		APIResponse<String> response = authService.register(userDto);
+		//return new ResponseEntity<>(response, HttpStatus.CREATED);
+		
+		
+		//return status dynamically based on response.getStatus()
+		
+		return ResponseEntity.status(response.getStatus()).body(response);
+	}
+
+	
+	@PostMapping("/login")
+	 public ResponseEntity<APIResponse<String>> loginCheck(@RequestBody LoginDto loginDto){
+			
+		
+		UsernamePasswordAuthenticationToken
+		token= new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
+	
+		Authentication authenticate = authenticationManager.authenticate(token);
+		return null;
+      }	 
+	 
+}
+
+=================>
+Step No 3
+-----------------
+Now add @Bean annotation in config file , if you don't do this then your dependecies injection will not work there .
+
+it will generate authenticationManager bean and inject into AuthenticationManager 
+
+
+=========================
+com.authserviceex1.config
+	AppSecurityConfig.java
+===========================
+
+@Bean
+	public AuthenticationManager AuthManager(AuthenticationConfiguration config) throws Exception {
+		
+		return config.getAuthenticationManager();	
+	}
+
+now 
+Your  --> aAppSecurityConfig.java class full code is attached below
+
 
 
 
