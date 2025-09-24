@@ -1,1 +1,17 @@
 
+
+
+
+@Bean
+	public AuthenticationProvider authProvider() {
+
+
+//the authManager autometically suppy the username and password to daoauthentication provider
+
+
+DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+
+
+// now my work is my DaoAuthenticationProvider needs to talk to database
+
+  }
